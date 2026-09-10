@@ -45,4 +45,4 @@ Fonts: Local woff2 + Google Fonts fallback.
 Video: sample MP4 (no account needed).
 Colors: Teal #4EA487, Yellow #F1C953, Brown #54370D
 
-
+Letztes Update: 10.09.2026
