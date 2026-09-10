@@ -1,6 +1,13 @@
 Travel Blog – Complete Project
 ==============================
-
+CHANGELOG
+=========
+- Hamburger-Menü auf Mobilgeräten entfernt
+- Zentrierung der Abschnitts-Überschriften korrigiert (Highlights, FAQ, Kontakt)
+- Hero-Bereich für kleine Bildschirme optimiert
+- Neues, scharfes Logo eingefügt
+- Nicht verwendete Bild- und Icon-Dateien entfernt
+- Deploy-Pfad korrigiert (Dateien liegen jetzt im Hauptverzeichnis)
 
 PAGES
 - index.html     → Home (Hero Cappadocia, Highlights carousel, FAQ accordion, Contact form)
