@@ -122,11 +122,37 @@ img {
   font-size: 1.25rem;
   font-weight: 700;
   position: relative;
+  transition: transform 0.2s ease;
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: var(--yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
 }
 
 .nav a:hover,
 .nav a:focus-visible {
   color: var(--yellow);
+  animation: navWiggle 0.3s ease;
+}
+
+.nav a:hover::after,
+.nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@keyframes navWiggle {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
 }
 
 .nav a:focus-visible {
@@ -263,6 +289,15 @@ img {
   box-shadow: 0 12px 40px rgba(0,0,0,0.12);
 }
 
+.carousel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.05) 45%, rgba(0,0,0,0) 65%);
+  z-index: 3;
+  pointer-events: none;
+}
+
 .carousel-slide {
   position: absolute;
   inset: 0;
@@ -301,13 +336,7 @@ img {
   left: 32px;
   top: 32px;
   max-width: 440px;
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  padding: 24px 28px;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-  border: 1px solid rgba(255,255,255,0.45);
+  z-index: 4;
 }
 
 .slide-overlay h3 {
@@ -531,11 +560,35 @@ img {
 }
 
 .form-checkbox input {
+  appearance: none;
+  -webkit-appearance: none;
   margin-top: 3px;
-  accent-color: var(--teal);
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  border: 2px solid var(--brown);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.form-checkbox input:checked {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.form-checkbox input:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 6px;
+  height: 10px;
+  border: solid var(--yellow);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .form-checkbox a {
@@ -986,7 +1039,7 @@ textarea:focus-visible {
 }
 
 .article-body {
-  max-width: 720px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px 24px 80px;
   font-size: 1.1rem;
@@ -1108,7 +1161,7 @@ textarea:focus-visible {
 
 .btn-share {
   background: var(--teal);
-  color: #FFFFFF;
+  color: var(--yellow);
   border: none;
   font-family: 'Arima', serif;
   font-size: 1.1rem;
@@ -1126,6 +1179,36 @@ textarea:focus-visible {
 .btn-share:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(78,164,135,0.35);
+}
+
+@media (min-width: 801px) and (max-width: 1200px) {
+  .card-carousel {
+    height: 340px;
+  }
+  .card-track {
+    height: 340px;
+  }
+  .dest-card {
+    width: 210px;
+    height: 308px;
+    margin-left: -105px;
+    margin-top: -154px;
+  }
+  .dest-card.pos-0 {
+    transform: translateX(-283px) rotate(5deg);
+  }
+  .dest-card.pos-1 {
+    transform: translateX(-141px) rotate(5deg);
+  }
+  .dest-card.pos-2 {
+    transform: translateX(0) rotate(5deg);
+  }
+  .dest-card.pos-3 {
+    transform: translateX(141px) rotate(5deg);
+  }
+  .dest-card.pos-4 {
+    transform: translateX(283px) rotate(5deg);
+  }
 }
 
 @media (max-width: 800px) {
@@ -1276,15 +1359,17 @@ textarea:focus-visible {
   animation: heroBadgeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1.3s forwards;
 }
 
-.hero-badge svg {
+.hero-badge svg,
+.hero-badge img {
   width: 100%;
   height: 100%;
   display: block;
+  border-radius: 50%;
 }
 
 /* Rotierender Textring um das Medaillon */
 .badge-ring {
-  transform-origin: 92.7998px 86.7998px;
+  transform-origin: 50% 50%;
   animation: badgeRingSpin 14s linear infinite;
 }
 
