@@ -272,6 +272,17 @@ img {
   line-height: 1.6;
 }
 
+@media (min-width: 769px) {
+  .section-header h2 {
+    font-size: 3.25rem;
+  }
+  .section-desc {
+    max-width: 980px;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
 /* ===== Highlights / Karussell ===== */
 .highlights {
   padding: 64px 20px 56px;
@@ -463,12 +474,18 @@ img {
   text-align: left;
   font-family: 'Palanquin', sans-serif;
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--brown);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+
+@media (min-width: 769px) {
+  .faq-question {
+    font-size: 1.5rem;
+  }
 }
 
 .faq-icon {
@@ -529,7 +546,7 @@ img {
 
 .form-group label {
   display: block;
-  font-size: 0.95rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: var(--brown);
   margin-bottom: 6px;
@@ -800,23 +817,23 @@ textarea:focus-visible {
 
 .article-kicker {
   font-family: 'Palanquin', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--teal);
   margin-bottom: 8px;
 }
 
 .article-content h1 {
-  font-size: 2.8rem;
+  font-size: 4rem;
   color: var(--yellow);
   line-height: 1.15;
   margin-bottom: 16px;
 }
 
 .article-lead {
-  font-size: 1.15rem;
+  font-size: 2rem;
   color: var(--brown);
-  line-height: 1.5;
+  line-height: 1.2;
   margin-bottom: 20px;
   max-width: 640px;
 }
@@ -852,13 +869,13 @@ textarea:focus-visible {
 }
 
 .author-role {
-  font-size: 0.9rem;
+  font-size: 1.125rem;
   color: var(--brown-light);
   margin-bottom: 12px;
 }
 
 .author-bio {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--brown);
   line-height: 1.4;
 }
@@ -1151,7 +1168,7 @@ textarea:focus-visible {
   color: var(--yellow);
   font-family: 'Palanquin', sans-serif;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   padding: 10px 16px;
   border-radius: 10px;
   margin-bottom: 16px;
@@ -1195,7 +1212,7 @@ textarea:focus-visible {
   color: var(--yellow);
   border: none;
   font-family: 'Arima', serif;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 700;
   padding: 12px 32px;
   border-radius: 40px;
@@ -1269,7 +1286,7 @@ textarea:focus-visible {
   }
   .article-content h1 {
     font-size: 2.5rem;
-    color: #F1C953;
+    color: var(--yellow);
   }
   .article-kicker {
     font-size: 1.25rem;
@@ -1575,9 +1592,17 @@ textarea:focus-visible {
 .article-body p,
 .article-body li {
   font-family: 'Palanquin', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.5rem;
   line-height: 1.65;
-  color: var(--brown);
+  color: #3D3D3D;
+}
+
+@media (max-width: 800px) {
+  .article-body p,
+  .article-body li {
+    font-size: 1.05rem;
+    color: var(--brown);
+  }
 }
 
 .pro-tips-label {
@@ -1646,10 +1671,10 @@ textarea:focus-visible {
 /* Tablet */
 @media (min-width: 601px) and (max-width: 1024px) {
   .article-content h1 {
-    font-size: 2.4rem;
+    font-size: 3rem;
   }
   .article-lead {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
   }
 }
 /* Finaler Review abgeschlossen - 11.09.2026 */
