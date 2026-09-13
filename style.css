@@ -684,8 +684,12 @@ img {
 .footer-left {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 72px;
   font-size: 0.95rem;
+}
+
+.footer-copyright {
+  order: -1;
 }
 
 .footer-left a:hover {
@@ -694,7 +698,7 @@ img {
 
 .footer-social {
   display: flex;
-  gap: 12px;
+  gap: 16px;
 }
 
 .social-icon {
@@ -722,6 +726,9 @@ img {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+  .footer-copyright {
+    order: 1;
   }
   .social-icon img {
     width: 24px;
