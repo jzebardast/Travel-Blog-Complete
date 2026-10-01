@@ -1,41 +1,48 @@
-Travel Blog – Complete Project
-==============================
+# Travel Blog – Fixes applied (based on feedback + Wireframes)
 
+## Applied from 3 feedback videos + Figma wireframes
 
-PAGES
-- index.html     → Home (Hero Cappadocia, Highlights carousel, FAQ accordion, Contact form)
-- article1.html  → Beaches article + 3D card carousel (prev/next + dots + autoplay) + charts
-- article2.html  → City Adventures + playable video (poster + custom play button)
-- article3.html  → Pattaya Pulse + stats + bar charts (visitor interest / best months)
+### Layout / Structure
+- [x] Content max-width consistent (1440px / sections ~1200px)
+- [x] Header full-bleed teal, inner content max 1440px
+- [x] Footer full-bleed teal, padding 60px 120px on large screens
+- [x] Sticky footer (no white bar / no extra scroll)
+- [x] main { flex: 1 } for proper footer stick
 
-USER STORIES COVERED
-✓ FAQ section with 4 entries, individually expandable, CSS animated open/close
-✓ Article subpage with functional carousel (prev/next buttons, visible slide change, swipe, autoplay)
-✓ Article subpage with embedded video (playable, responsive, custom overlay play button)
-✓ Author section with photo + short bio on every article page
-✓ Responsive down to 320px, burger menu on mobile, content max-width 1440px
-✓ Header + footer, contact form with validation
-✓ Big-screen layout: header/footer full-bleed, content centered at 1440px
+### Hero
+- [x] Yellow wave path updated from Property 1=03.svg
+- [x] Text max-width tightened so it stays inside yellow area
+- [x] Badge + photo structure preserved
 
-STRUCTURE
-/
-  index.html
-  article1.html
-  article2.html
-  article3.html
-  style.css
-  font.css
-  standard.css
-  variabels.css
-  script.js
-  README.txt
-  assets/
-    images/   (logo, hero, highlights, carousel, charts, author)
-    fonts/    (Arima + Palanquin woff2)
-    icons/    (Blog-logo.svg)
+### FAQ
+- [x] Items background #F1C953 (yellow) as in Figma
+- [x] border-radius 12px, gap 32px
+- [x] Accordion grid animation
 
-Fonts: Local woff2 + Google Fonts fallback.
-Video: sample MP4 (no account needed).
-Colors: Teal #4EA487, Yellow #F1C953, Brown #54370D
+### Contact form
+- [x] Underline inputs (border-bottom only)
+- [x] Send button: disabled = outlined grey; active = teal bg + yellow text
+- [x] Privacy checkbox enables Send (JS already present)
+- [x] Form max-width ~1100px
 
+### Icons / Assets
+- [x] Social icons paths fixed (images/ folder)
+- [x] Nav mobile icons paths fixed
+- [x] Font paths fixed relative to css/
 
+### Nav
+- [x] Hover wiggle + yellow underline (::after) already present
+
+## Still recommended (next pass)
+- [ ] Export / replace social icons with exact Figma yellow-circle SVGs if PNG quality differs
+- [ ] Article pages: unify content width, Pro-tips rotated label, Share button design
+- [ ] Hero on very large screens (1920): header full 1920, content 1440 centered
+- [ ] Carousel notebook scaling (images not cut off)
+- [ ] Mount Fuji page (article4) – optional layout reuse
+
+## How to use
+1. Open `index.html` in browser (or serve the folder)
+2. Work in the **same** GitHub repo – new commits only, do not create new repo
+3. Make repo **Public**
+
+Colors: --teal #4EA487 | --yellow #F1C953 | --brown #54370D

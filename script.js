@@ -86,13 +86,11 @@
   startAuto();
 })();
 
-// ===== FAQ-Akkordeon =====
+// ===== FAQ-Akkordeon (jedes Item unabhängig, mehrere gleichzeitig offen möglich) =====
 document.querySelectorAll('.faq-question').forEach(btn => {
   btn.addEventListener('click', () => {
     const item = btn.parentElement;
-    const wasOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!wasOpen) item.classList.add('open');
+    item.classList.toggle('open');
   });
 });
 
@@ -100,7 +98,19 @@ document.querySelectorAll('.faq-question').forEach(btn => {
 (function () {
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
+  const privacyCheckbox = document.getElementById('privacy');
+  const sendBtn = document.getElementById('btnSend');
+  const privacyError = document.getElementById('privacyError');
   if (!contactForm) return;
+
+  // Send-Button erst aktiv, wenn die Checkbox angehakt ist
+  if (privacyCheckbox && sendBtn) {
+    sendBtn.disabled = !privacyCheckbox.checked;
+    privacyCheckbox.addEventListener('change', () => {
+      sendBtn.disabled = !privacyCheckbox.checked;
+      if (privacyCheckbox.checked && privacyError) privacyError.hidden = true;
+    });
+  }
 
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -109,8 +119,9 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     const message = document.getElementById('message').value.trim();
     const privacy = document.getElementById('privacy').checked;
 
+    if (privacyError) privacyError.hidden = privacy;
+
     if (!name || !email || !message || !privacy) {
-      alert('Please fill in all fields and accept the privacy policy.');
       return;
     }
 
@@ -118,6 +129,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     formSuccess.hidden = false;
     setTimeout(() => {
       contactForm.reset();
+      if (sendBtn) sendBtn.disabled = true;
       contactForm.hidden = false;
       formSuccess.hidden = true;
     }, 4000);
@@ -244,4 +256,52 @@ document.querySelectorAll('.faq-question').forEach(btn => {
       showShareMenu(btn);
     });
   });
+})();
+
+// ===== Nav: yellow underline + active section highlight =====
+(function () {
+  const navLinks = document.querySelectorAll('.nav a[href^="#"]');
+  if (!navLinks.length) return;
+
+  const sections = [];
+  navLinks.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, link });
+  });
+
+  function setActive(id) {
+    navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  }
+
+  // Smooth scroll on click + set active
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 128;
+      const top = target.getBoundingClientRect().top + window.scrollY - headerH - 8;
+      window.scrollTo({ top, behavior: 'smooth' });
+      setActive(id);
+    });
+  });
+
+  // Scroll spy: highlight nav item for section in view
+  function onScroll() {
+    const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 128;
+    const y = window.scrollY + headerH + 40;
+    let current = null;
+    for (const s of sections) {
+      if (s.el.offsetTop <= y) current = s.id;
+    }
+    if (current) {
+      setActive(current);
+    } else {
+      navLinks.forEach(a => a.classList.remove('active'));
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 })();
