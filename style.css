@@ -1,9 +1,11 @@
 /* ===== Layout für große Bildschirme ===== */
-/* Header & Footer: randlos bis 1920px, Inhalt zentriert auf max. 1440px */
+/* Header & Footer: randlos (Hintergrund volle Breite), Inhalt überall auf EINER Linie:
+   Inhaltsbreite 1200px (Figma: Carousel/Footer-Inhalt = 1200px), zentriert, seitlicher Abstand 20px */
 
 :root {
-  --content-max: 1440px;
-  --max-width: 1440px;
+  --gutter: 20px;
+  --content-max: 1240px;   /* 1200px Inhalt + 2 x 20px Abstand (border-box) */
+  --max-width: 1240px;
   --teal: #4EA487;
   --yellow: #F1C953;
   --brown: #54370D;
@@ -85,7 +87,7 @@ img {
 .header-inner {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--gutter);
   height: 100%;
   display: flex;
   align-items: center;
@@ -442,7 +444,7 @@ img {
 
 @media (max-width: 768px) {
   .highlights {
-    padding: 48px 16px 40px;
+    padding: 48px 20px 40px;   /* Figma mobil: 335px Karussell auf 375px = 20px Rand */
   }
   .section-header h2 {
     font-size: 2rem;
@@ -743,19 +745,20 @@ img {
 .footer {
   background: var(--teal);
   color: #F8F5EB;
-  padding: 40px 24px;
+  padding: 40px 0;
   margin-top: auto; /* sticky-footer: sticks to bottom */
   width: 100%;
 }
 @media (min-width: 1200px) {
   .footer {
-    padding: 60px 120px;
+    padding: 60px 0;
   }
 }
 
 .footer-inner {
   max-width: var(--content-max);
   margin: 0 auto;
+  padding: 0 var(--gutter);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -906,22 +909,17 @@ textarea:focus-visible {
   }
 }
 
-/* Figma-Spezifikation: Frame 430 padding 0px 100px auf breiten Screens */
-@media (min-width: 1200px) {
-  .header-inner {
-    padding: 0 100px;
-  }
-}
 
 /* ===== Artikelseiten ===== */
 .article-hero {
-  padding: 60px 24px 40px;
+  padding: 60px 0 40px;
   background: #fff;
 }
 
 .article-hero-inner {
   max-width: var(--content-max);
   margin: 0 auto;
+  padding: 0 var(--gutter);
   display: grid;
   grid-template-columns: 1fr 280px;
   gap: 40px;
@@ -1241,7 +1239,7 @@ textarea:focus-visible {
 .article-body {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 20px 24px 80px;
+  padding: 20px var(--gutter) 80px;
   font-size: 1.1rem;
   line-height: 1.65;
   color: var(--brown);
@@ -1279,7 +1277,7 @@ textarea:focus-visible {
 
 /* Statistik-Abschnitt (Artikel 1) */
 .article-charts {
-  padding: 40px 24px 80px;
+  padding: 40px var(--gutter) 80px;
   max-width: var(--content-max);
   margin: 0 auto;
 }
@@ -1554,7 +1552,7 @@ textarea:focus-visible {
 /* Ebene 3: Text */
 .hero-content {
   position: absolute;
-  left: 7.22%;
+  left: max(var(--gutter), calc((100% - 1200px) / 2));   /* gleiche Linie wie Logo und Inhalt */
   top: 26.14%;
   z-index: 3;
   max-width: 320px;
@@ -1796,7 +1794,7 @@ textarea:focus-visible {
 /* Mobile Typografie */
 @media (max-width: 600px) {
   .article-hero {
-    padding: 32px 20px 24px;
+    padding: 32px 0 24px;
   }
   .article-content h1 {
     font-size: 2.1rem;
