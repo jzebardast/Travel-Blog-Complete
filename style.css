@@ -527,7 +527,7 @@ img {
 }
 
 .faq-icon {
-  font-size: 0.8rem;
+  font-size: 1rem;
   transition: transform var(--transition);
   flex-shrink: 0;
 }
@@ -551,7 +551,7 @@ img {
   overflow: hidden;
   margin: 0 20px;
   padding: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--brown-light);
   line-height: 1.5;
   background: #fff;
@@ -630,7 +630,7 @@ img {
   align-items: flex-start;
   gap: 10px;
   margin-bottom: 28px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--brown-light);
 }
 
@@ -679,7 +679,7 @@ img {
 .privacy-error {
   display: block;
   color: #D9364A;
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-top: -8px;
   margin-bottom: 8px;
 }
@@ -770,7 +770,7 @@ img {
   display: flex;
   align-items: center;
   gap: 72px;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .footer-copyright {
@@ -953,7 +953,7 @@ textarea:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 16px 32px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--brown-light);
 }
 
@@ -1312,7 +1312,7 @@ textarea:focus-visible {
 }
 
 .chart-caption {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--brown-light);
 }
 
@@ -1809,7 +1809,7 @@ textarea:focus-visible {
     line-height: 1.5;
   }
   .article-meta {
-    font-size: 0.85rem;
+    font-size: 1rem;
     gap: 10px 16px;
   }
   .author-card {
@@ -1820,7 +1820,7 @@ textarea:focus-visible {
     font-size: 1.2rem;
   }
   .author-bio {
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.45;
   }
   .article-section-title {
