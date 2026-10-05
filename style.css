@@ -468,17 +468,18 @@ img {
   .slide-overlay p {
     font-size: 5.9701cqw;            /* 20px */
   }
+  /* Punkte kleiner als im Figma-Wert (28px), damit sie im Verhältnis zu Überschrift und Text nicht riesig wirken */
   .carousel-dots {
-    bottom: 8.6567cqw;               /* 29px */
-    gap: 6.5672cqw;                  /* 22px */
+    bottom: 5.9701cqw;               /* 20px */
+    gap: 3.5821cqw;                  /* 12px */
   }
   .dot {
-    width: 8.3582cqw;                /* 28px */
-    height: 8.3582cqw;
+    width: 4.7761cqw;                /* 16px */
+    height: 4.7761cqw;
   }
   .dot.active {
-    width: 11.9403cqw;               /* 40px */
-    border-radius: 4.1791cqw;
+    width: 7.1642cqw;                /* 24px */
+    border-radius: 2.3881cqw;
   }
 }
 
