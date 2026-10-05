@@ -70,7 +70,6 @@ img {
 @media (max-width: 768px) {
   .desktop-only { display: none !important; }
   .mobile-only { display: flex !important; }
-  body { padding-bottom: 90px; }
 }
 
 /* ===== Kopfzeile ===== */
@@ -886,8 +885,9 @@ img {
   .bottom-nav {
     display: flex;
   }
+  /* Footer reicht bis ganz nach unten; der Platz für die fixierte Navigation (72px) liegt IM Footer */
   .footer {
-    margin-bottom: 72px;
+    padding-bottom: 112px;
   }
 }
 
