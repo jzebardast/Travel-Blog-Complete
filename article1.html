@@ -240,6 +240,28 @@
         });
       });
 
+      // Hover-Effekt wie im Figma-Prototyp: Bewegt sich die Maus über eine seitliche Karte,
+      // wandert sie in die Mitte. Nur auf Geräten mit Maus. Es zählt nur echte Mausbewegung
+      // (mousemove), damit nichts passiert, wenn sich Karten unter dem ruhenden Mauszeiger verschieben.
+      if (window.matchMedia('(hover: hover)').matches) {
+        cards.forEach(function (card, i) {
+          var hoverTimer = null;
+          card.addEventListener('mousemove', function (e) {
+            // Chrome meldet nach dem Verschieben der Karten ein "künstliches" mousemove ohne Bewegung: ignorieren
+            if (!e.movementX && !e.movementY) return;
+            if (isAnimating || hoverTimer || card.classList.contains('pos-2')) return;
+            hoverTimer = setTimeout(function () {
+              hoverTimer = null;
+              if (!card.classList.contains('pos-2')) goToCard(i);
+            }, 220);
+          });
+          card.addEventListener('mouseleave', function () {
+            clearTimeout(hoverTimer);
+            hoverTimer = null;
+          });
+        });
+      }
+
       dots.forEach(function (dot, i) {
         dot.addEventListener('click', function () {
           goToCard(i);
