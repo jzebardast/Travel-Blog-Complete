@@ -194,9 +194,10 @@
         var currentPos = visualSlots.indexOf(targetIndex);
         if (currentPos === -1) return;
 
-        // How many next() steps to bring it to center?
-        var stepsNext = (currentPos - centerPos + N) % N;
-        var stepsPrev = (centerPos - currentPos + N) % N;
+        // Wie viele Schritte braucht die Karte bis zur Mitte?
+        // next() schiebt alle Karten nach rechts, prev() nach links
+        var stepsNext = (centerPos - currentPos + N) % N;
+        var stepsPrev = (currentPos - centerPos + N) % N;
         var useNext = stepsNext <= stepsPrev;
         var steps = useNext ? stepsNext : stepsPrev;
 
