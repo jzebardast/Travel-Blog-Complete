@@ -1626,16 +1626,19 @@ textarea:focus-visible {
 
 .hero-badge svg,
 .hero-badge img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
   border-radius: 50%;
 }
 
-/* Rotierender Textring um das Medaillon */
+/* Wie im Figma-Prototyp: nur der Textring dreht sich (im Uhrzeigersinn, ca. 12 s pro Umdrehung),
+   die Flagge in der Mitte bleibt stehen */
 .badge-ring {
   transform-origin: 50% 50%;
-  animation: badgeRingSpin 14s linear infinite;
+  animation: badgeRingSpin 12s linear infinite;
 }
 
 /* ===== Eintritts-Animationen ===== */
@@ -1710,7 +1713,9 @@ textarea:focus-visible {
   .hero-badge {
     width: 120px;
     height: 120px;
-    left: 78%;
+    /* gleiche Position wie auf dem Desktop (505px), aber nie aus dem Bild heraus:
+       so springt das Medaillon beim Wechsel zwischen Desktop und Mobil nicht zur Seite */
+    left: min(505px, calc(100% - 90px));
     top: calc(100% - 84px);
   }
 }
