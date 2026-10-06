@@ -910,6 +910,19 @@ textarea:focus-visible {
   .header-inner {
     justify-content: center;
   }
+  /* Kopfzeile mobil wie in Figma (ca. 70px statt 128px) */
+  :root {
+    --header-height: 70px;
+  }
+  .logo-img {
+    height: 56px;
+  }
+}
+
+/* Beim Springen zu einem Abschnitt (Menü unten auf Mobil) liegt die Überschrift
+   nicht unter der fixierten Kopfzeile */
+html {
+  scroll-padding-top: var(--header-height);
 }
 
 
