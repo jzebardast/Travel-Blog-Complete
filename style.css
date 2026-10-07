@@ -872,9 +872,10 @@ img {
   transition: background var(--transition);
 }
 
-.bottom-nav-item svg {
-  width: 26px;
-  height: 26px;
+.bottom-nav-item svg,
+.bottom-nav-item img {
+  width: 32px;    /* Figma mobil: Icons ca. 32px (vorher 24px) */
+  height: 32px;
 }
 
 .bottom-nav-item.active,
