@@ -821,10 +821,16 @@ img {
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .footer-inner {
     align-items: flex-end;
     text-align: left;
+    gap: 12px;
+  }
+  /* Etwas engere Icons, damit Copyright und Social-Icons auch auf schmalen Handys
+     (ab ca. 345px) in einer Reihe nebeneinander stehen und nicht untereinander */
+  .footer-social {
+    gap: 8px;
   }
   .footer-left {
     flex-direction: column;
