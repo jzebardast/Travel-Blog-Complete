@@ -1350,28 +1350,41 @@ html {
   background: rgba(78, 164, 135, 0.2);
   border-radius: 30px;
   padding: 24px 28px;
-  margin: 40px 0;
+  margin: 90px 0 40px;   /* Platz für den Reiter, der über der Ecke sitzt */
   position: relative;
 }
 
+/* Wie in Figma: Der Reiter "Pro tipps" sitzt auf der linken oberen Ecke des Kastens
+   (196 x 66px, 13,67° gedreht) und ragt links und oben aus dem Kasten heraus */
 .pro-tips-label {
-  display: inline-flex;
+  position: absolute;
+  top: -65px;
+  /* 47px wie in Figma, aber nie aus dem Bildschirm heraus (die Drehung schiebt die obere Kante ca. 16px nach links) */
+  left: calc(-1 * min(47px, max(var(--gutter), (100vw - 1200px) / 2) - 20px));
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: flex-start;
+  gap: 14px;
+  box-sizing: border-box;
+  width: 196px;
+  height: 66px;
+  padding: 0 15px 0 14px;
   background: var(--teal);
   color: var(--yellow);
   font-family: 'Palanquin', sans-serif;
   font-weight: 700;
   font-size: 1.75rem;
-  padding: 10px 16px;
+  line-height: 1.2;
   border-radius: 10px;
-  margin-bottom: 16px;
   transform: rotate(-13.67deg);
+  transform-origin: 0 100%;
+  white-space: nowrap;
 }
 
-.pro-tips-label svg {
-  width: 22px;
-  height: 22px;
+.pro-tips-label svg,
+.pro-tips-label img {
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
 }
 
@@ -1381,6 +1394,27 @@ html {
   font-size: 1.5rem;
   line-height: 1.2;
 }
+
+@media (max-width: 768px) {
+  .pro-tips {
+    margin-top: 72px;
+  }
+  .pro-tips-label {
+    top: -48px;
+    left: -2px;
+    width: 156px;
+    height: 52px;
+    gap: 10px;
+    padding: 0 10px;
+    font-size: 1.375rem;   /* 22px */
+  }
+  .pro-tips-label svg,
+  .pro-tips-label img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 
 .pro-tips li {
   margin-bottom: 8px;
