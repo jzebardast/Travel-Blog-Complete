@@ -1034,9 +1034,17 @@ html {
   margin-top: 14px;
 }
 
+/* LinkedIn und WhatsApp sind Schrift und werden als Text gesetzt (nicht als Bild),
+   beide mit exakt gleicher Größe und Schriftart */
 .author-linkedin,
 .author-whatsapp {
   display: inline-block;
+  font-family: 'Palanquin', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--teal);
+  text-decoration: none;
   opacity: 0.85;
   transition: opacity var(--transition);
 }
@@ -1044,6 +1052,7 @@ html {
 .author-linkedin:hover,
 .author-whatsapp:hover {
   opacity: 1;
+  text-decoration: underline;
 }
 
 .article-carousel-section {
