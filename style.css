@@ -777,6 +777,17 @@ img {
 
 .footer-copyright {
   order: -1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;                      /* Figma: Kreis-Icon + Text */
+}
+.copyright-icon {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.copyright-brand {
+  font-size: 1.125rem;           /* Figma: "Travel" größer als "Blog 2026" */
 }
 
 .footer-left a:hover {
@@ -1029,30 +1040,44 @@ html {
 
 .author-links {
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   margin-top: 14px;
 }
 
+.author-share-icon {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: block;
+}
+
+.author-link-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 /* LinkedIn und WhatsApp sind Schrift und werden als Text gesetzt (nicht als Bild),
-   beide mit exakt gleicher Größe und Schriftart */
+   beide mit exakt gleicher Größe und Schriftart, unterstrichen wie in Figma */
 .author-linkedin,
 .author-whatsapp {
   display: inline-block;
   font-family: 'Palanquin', sans-serif;
   font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.125rem;
+  line-height: 1.2;
   color: var(--teal);
-  text-decoration: none;
-  opacity: 0.85;
+  text-decoration: underline;
+  text-underline-offset: 3px;
   transition: opacity var(--transition);
 }
 
 .author-linkedin:hover,
 .author-whatsapp:hover {
-  opacity: 1;
-  text-decoration: underline;
+  opacity: 0.75;
 }
 
 .article-carousel-section {
@@ -1451,14 +1476,22 @@ html {
   font-family: 'Arima', serif;
   font-size: 1.5rem;
   font-weight: 700;
-  padding: 12px 32px;
+  height: 48px;
+  padding: 0 28px 0 24px;
   border-radius: 40px;
   cursor: pointer;
   transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 8px;
+}
+
+.btn-share-icon {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: block;
 }
 
 .share-btn-wrap {
@@ -1554,20 +1587,20 @@ html {
     z-index: 5;
   }
   .dest-card.pos-1 {
-    transform: translateX(186px) rotate(0deg);
+    transform: translateX(-186px) rotate(0deg);   /* links angeschnitten */
     z-index: 4;
   }
   .dest-card.pos-3 {
-    transform: translateX(246px) rotate(0deg);
-    z-index: 3;
+    transform: translateX(186px) rotate(0deg);    /* rechts angeschnitten */
+    z-index: 4;
   }
   .dest-card.pos-0 {
-    transform: translateX(276px) rotate(0deg);
+    transform: translateX(-276px) rotate(0deg);
     z-index: 2;
   }
   .dest-card.pos-4 {
-    transform: translateX(309px) rotate(0deg);
-    z-index: 1;
+    transform: translateX(276px) rotate(0deg);
+    z-index: 2;
   }
 }
 
@@ -1972,8 +2005,8 @@ html {
     font-size: 1.05rem;
   }
   .btn-share {
-    font-size: 1rem;
-    padding: 14px 36px;
+    font-size: 1.25rem;
+    padding: 0 24px 0 20px;
   }
 }
 
