@@ -2020,3 +2020,81 @@ html {
   }
 }
 /* Finaler Review abgeschlossen - 11.09.2026 */
+
+
+/* ===== Abgleich mit den Figma-Spezifikationen (Wireframes / Article 1-3 / Big screen view) =====
+   Werte stammen aus den Figma-CSS-Exporten (Frame 1440 px). Auf Mobilgeräten bleiben die kleineren Größen. */
+
+/* Farben und Schriften, die überall gelten */
+.article-meta,
+.author-role {
+  color: var(--brown);                      /* Figma: Secondary braun #54370D */
+}
+.author-role {
+  font-family: 'Arima', serif;              /* Figma: Arima 400, nicht kursiv */
+  font-style: normal;
+}
+.article-content h1,
+.article-kicker {
+  letter-spacing: 0;                        /* in Figma kein Zeichenabstand */
+}
+.pro-tips-label {
+  font-family: 'Palanquin', sans-serif;     /* Figma: Palanquin 700, 28px */
+}
+.slide-overlay h3 {
+  font-family: 'Palanquin', sans-serif;     /* Figma: Palanquin 600 */
+}
+.privacy-error {
+  color: #B9102F;                           /* Figma-Fehlerfarbe */
+}
+.hero-content p {
+  font-weight: 500;                         /* Figma: Palanquin 500 */
+}
+/* Fußzeile: "Travel Blog 2026" ist ein Text mit 18px, Imprint und Cookie Preferences haben 16px */
+.footer-copyright {
+  font-size: 1.125rem;
+}
+.copyright-brand {
+  font-size: inherit;
+}
+
+/* Artikel 2, 3 und 4: Einleitung 28px mit 110 % Zeilenhöhe (Artikel 1: 32px mit 120 %) */
+.article-lead--compact {
+  font-size: clamp(1.125rem, 1.95vw, 1.75rem);
+  line-height: 1.1;
+}
+
+/* Nur Desktop und Tablet */
+@media (min-width: 801px) {
+  .article-lead {
+    max-width: 902px;                           /* Figma: Textbox 902px breit (3 Zeilen bei Artikel 2 und 3) */
+  }
+  .article-kicker {
+    font-size: clamp(1.5rem, 2.8vw, 2.5rem);   /* Figma: 40px, 600 */
+    line-height: 1.2;
+  }
+  .article-content h1 {
+    line-height: 1.2;
+  }
+  .article-meta {
+    line-height: 1.2;
+  }
+  .author-bio {
+    line-height: 1.2;
+  }
+  .article-body p,
+  .article-body li {
+    line-height: 1.2;                           /* Figma: 120 % */
+  }
+  .article-section-title {
+    font-size: 2rem;                            /* Figma: Arima 32px, 600 */
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .section-desc {
+    line-height: 1.1;                           /* Figma: 110 % */
+  }
+  .form-group label {
+    line-height: 1.2;
+  }
+}
