@@ -2097,4 +2097,12 @@ html {
   .form-group label {
     line-height: 1.2;
   }
+  /* Pro-tipps-Reiter: Position wie in Figma (Reiter 196 x 66px, -13,67° gedreht, überlappt die Kastenecke) */
+  .pro-tips {
+    margin-top: 96px;
+  }
+  .pro-tips-label {
+    top: -50px;
+    left: calc(-1 * min(40px, max(var(--gutter), (100vw - 1200px) / 2) - 20px));
+  }
 }
