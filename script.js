@@ -101,6 +101,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   const privacyCheckbox = document.getElementById('privacy');
   const sendBtn = document.getElementById('btnSend');
   const privacyError = document.getElementById('privacyError');
+  let successTimer = null;
   if (!contactForm) return;
 
   // Send-Button erst aktiv, wenn die Checkbox angehakt ist
@@ -125,12 +126,13 @@ document.querySelectorAll('.faq-question').forEach(btn => {
       return;
     }
 
-    contactForm.hidden = true;
+    // Formular sofort leeren und sichtbar lassen, damit sofort wieder etwas eingegeben werden kann.
+    // Die Erfolgsmeldung erscheint unter dem Formular und verschwindet nach 4 Sekunden.
+    contactForm.reset();
+    if (sendBtn) sendBtn.disabled = true;
     formSuccess.hidden = false;
-    setTimeout(() => {
-      contactForm.reset();
-      if (sendBtn) sendBtn.disabled = true;
-      contactForm.hidden = false;
+    clearTimeout(successTimer);
+    successTimer = setTimeout(() => {
       formSuccess.hidden = true;
     }, 4000);
   });
