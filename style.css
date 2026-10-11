@@ -2154,3 +2154,9 @@ html {
     left: calc(-1 * min(40px, max(var(--gutter), (100vw - 1200px) / 2) - 20px));
   }
 }
+
+/* Elemente mit dem Attribut "hidden" bleiben unsichtbar, auch wenn eine Klasse "display" setzt
+   (z. B. .privacy-error { display: block } zeigte die rote Fehlermeldung schon beim Laden der Seite) */
+[hidden] {
+  display: none !important;
+}
