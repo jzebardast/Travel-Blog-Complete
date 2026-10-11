@@ -450,7 +450,12 @@ img {
   .section-header h2 {
     font-size: 2rem;
   }
-  /* Mobile-Frame laut Figma: 335 x 533 (100cqw = 335px) */
+}
+
+/* Handy (bis 480px): hohes Mobile-Format laut Figma 335 x 533 (100cqw = 335px).
+   Darüber (große Handys, Tablet, z. B. iPad mini mit 768px) wäre diese Karte 900 bis über 1100px hoch
+   und größer als der Bildschirm. */
+@media (max-width: 480px) {
   .carousel {
     aspect-ratio: 335 / 533;
     border-radius: 0 29.85cqw 0 0;   /* 100 / 335 */
@@ -480,6 +485,35 @@ img {
   .dot.active {
     width: 7.1642cqw;                /* 24px */
     border-radius: 2.3881cqw;
+  }
+}
+
+/* Große Handys und Tablet (481-768px): breites Format, Höhe passt auf den Bildschirm, Text bleibt gut lesbar */
+@media (min-width: 481px) and (max-width: 768px) {
+  .carousel {
+    aspect-ratio: 3 / 2;
+    border-radius: 0 13cqw 0 0;
+  }
+  .slide-overlay {
+    width: 80cqw;
+    top: 6cqw;
+  }
+  .slide-overlay h3 {
+    font-size: max(1.5rem, 4.4cqw);
+  }
+  .slide-overlay p {
+    font-size: max(1rem, 2.6cqw);
+  }
+  .carousel-dots {
+    bottom: 4cqw;
+  }
+  .dot {
+    width: 2.6cqw;
+    height: 2.6cqw;
+  }
+  .dot.active {
+    width: 3.8cqw;
+    border-radius: 1.9cqw;
   }
 }
 
@@ -1720,17 +1754,20 @@ html {
   display: none;
 }
 
-/* Ebene 4: Rundes Medaillon */
+/* Ebene 4: Rundes Medaillon
+   Bewegung wie im Figma-Prototyp (aus dem Screen-Recording gemessen): Das Medaillon erscheint direkt,
+   nachdem die gelbe Fläche stehen geblieben ist. Es kommt von rechts, fährt ca. 255px nach links und
+   ca. 75px nach oben auf die Kurve und wächst dabei in ca. 0,7 s von 30 % auf 100 %. */
 .hero-badge {
+  --badge-travel: 1;                       /* 1 = Desktop, kleiner auf Mobil */
   position: absolute;
   left: calc(var(--hero-left) + 485px);   /* Mitte: Text (320px) + 85px Abstand + halbes Medaillon; wandert mit dem Text */
   top: 72%;
   width: 160px;
   height: 160px;
   z-index: 4;
-  opacity: 0;
-  transform: translate(-50%, calc(-50% + 260px)) scale(0.6) rotate(-40deg);
-  animation: heroBadgeRise 0.9s cubic-bezier(0.34, 1.36, 0.64, 1) 2.5s forwards;
+  transform: translate(-50%, -50%);        /* Endposition (auch ohne Animation sichtbar) */
+  animation: heroBadgeIn 0.7s linear 2.75s both;
   filter: drop-shadow(-2px 4px 10.8px rgba(0, 0, 0, 0.25));
 }
 
@@ -1744,11 +1781,14 @@ html {
   border-radius: 50%;
 }
 
-/* Wie im Figma-Prototyp: nur der Textring dreht sich (im Uhrzeigersinn, ca. 12 s pro Umdrehung),
-   die Flagge in der Mitte bleibt stehen */
+/* Wie im Figma-Prototyp: nur der Textring dreht sich im Uhrzeigersinn, die Flagge in der Mitte bleibt stehen.
+   Der Ring startet aus dem Stand, wird langsam schneller (ca. 2,4 s) und dreht danach gleichmäßig weiter
+   (ca. 7 s pro Umdrehung). */
 .badge-ring {
   transform-origin: 50% 50%;
-  animation: badgeRingSpin 12s linear infinite;
+  animation:
+    badgeRingStart 2.4s ease-in 4.25s forwards,
+    badgeRingSpin 7s linear 6.65s infinite;
 }
 
 /* ===== Eintritts-Animationen ===== */
@@ -1772,25 +1812,33 @@ html {
   to   { opacity: 1; }
 }
 
-@keyframes heroBadgeRise {
-  0%   { opacity: 0; }
-  25%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+/* Weg des Medaillons: Werte aus dem Figma-Recording (Abstand zur Endposition, Größe), alle 0,1 s gemessen */
+@keyframes heroBadgeIn {
+  0%     { opacity: 0; transform: translate(calc(-50% + 255px * var(--badge-travel)), calc(-50% + 50px * var(--badge-travel))) scale(0.30); }
+  5%     { opacity: 1; }
+  14.3%  { transform: translate(calc(-50% + 113px * var(--badge-travel)), calc(-50% + 76px * var(--badge-travel))) scale(0.44); }
+  28.6%  { transform: translate(calc(-50% + 52px * var(--badge-travel)),  calc(-50% + 51px * var(--badge-travel))) scale(0.65); }
+  42.9%  { transform: translate(calc(-50% + 4px * var(--badge-travel)),   calc(-50% + 22px * var(--badge-travel))) scale(0.93); }
+  57.1%  { transform: translate(calc(-50% + 4px * var(--badge-travel)),   calc(-50% + 17px * var(--badge-travel))) scale(0.96); }
+  71.4%  { transform: translate(-50%, calc(-50% + 8px * var(--badge-travel))) scale(0.98); }
+  85.7%  { transform: translate(-50%, calc(-50% + 5px * var(--badge-travel))) scale(0.99); }
+  100%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes badgeRingStart {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(61deg); }
 }
 
 @keyframes badgeRingSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from { transform: rotate(61deg); }
+  to   { transform: rotate(421deg); }
 }
 
 /* Reduzierte Bewegung: sofort der Endzustand */
 @media (prefers-reduced-motion: reduce) {
   .hero-wave, .hero-content, .hero-content h1, .hero-content p, .hero-badge {
     animation: none !important;
-  }
-  .hero-badge {
-    opacity: 1;
-    transform: translate(-50%, -50%);
   }
   .badge-ring {
     animation: none !important;
@@ -1843,7 +1891,7 @@ html {
        so springt das Medaillon beim Wechsel zwischen Desktop und Mobil nicht zur Seite */
     left: min(505px, calc(100% - 90px));
     top: calc(100% - 84px);
-    transform: translate(-50%, calc(-50% + 200px)) scale(0.6) rotate(-40deg);
+    --badge-travel: 0.5;
   }
 }
 
