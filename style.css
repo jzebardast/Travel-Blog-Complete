@@ -1647,14 +1647,22 @@ html {
    4. Das Medaillon steigt von unten auf und setzt sich auf die Kurve */
 .hero-figma {
   container-type: inline-size;                               /* cqw = Breite des Heroes */
-  --hero-left: max(var(--gutter), calc((100cqw - 1200px) / 2));   /* eine Linie für Text UND Medaillon */
-  --hero-shift: max(0px, calc(50cqw - var(--hero-left) - 160px)); /* Startposition des Texts: Mitte */
+  /* Figma "hero web": Rahmen 1440 x 547px, auf größeren Bildschirmen mittig */
+  --frame-left: max(0px, calc((100cqw - 1440px) / 2));
+  /* Text links: 104px (7,22 % von 1440), auf schmaleren Bildschirmen weniger, mindestens der Seitenrand */
+  --hero-pad: clamp(var(--gutter), calc(100cqw - 1096px), 104px);
+  --hero-left: calc(var(--frame-left) + var(--hero-pad));
+  /* Breite der gelben Fläche: Figma 647px, auf schmaleren Bildschirmen kleiner, aber immer breit genug für den Text */
+  --wave-w: max(calc((var(--hero-pad) + 369px) * 1.261), min(647px, 44.93cqw));
+  --hero-shift: max(0px, calc(50cqw - var(--hero-left) - 172px)); /* Startposition des Texts: Mitte */
   position: relative;
   width: 100%;
-  height: 515px;
+  height: 547px;                                             /* Figma: 515px Foto + gelbe Welle ragt unten heraus */
+  min-height: 0;                                             /* überschreibt die allgemeine .hero-Regel (max-height: 480px hat die Welle unten abgeschnitten) */
+  max-height: none;
   margin: 0;
   overflow: hidden;
-  background: var(--yellow);
+  background: #FFFFFF;
 }
 
 /* Ebene 1: Hintergrundfoto (liegt von Anfang an unter der gelben Fläche).
@@ -1663,7 +1671,7 @@ html {
 .hero-photo {
   position: absolute;
   top: 0;
-  height: 100%;
+  height: 515px;
   --photo-left: max(290px, calc((100cqw - 1200px) / 2 - 300px));
   left: var(--photo-left);
   width: calc(100cqw - var(--photo-left) + 103px);
@@ -1672,22 +1680,30 @@ html {
   z-index: 1;
 }
 
-/* Ebene 2: Gelbe Fläche mit Wellenkante. Der Schatten füllt links von der Fläche alles gelb,
-   so bleibt beim Verschieben nach links keine Lücke. */
+/* Ebene 2: Gelbe Fläche mit Wellenkante (Figma "Vector 16": 647 x 540px).
+   Die Form ist unten 25px höher als das Foto und hat dort die geschwungene Unterkante.
+   Das ::before füllt links von der Fläche alles gelb (bis zur Höhe des Fotos), so bleibt beim Verschieben
+   und auf sehr breiten Bildschirmen keine Lücke. */
 .hero-wave {
   position: absolute;
-  left: 0;
+  left: var(--frame-left);
   top: 0;
-  width: 65.9%;
-  min-width: 420px;
-  max-width: 950px;
-  height: 100%;
+  width: var(--wave-w);
+  height: 547px;
   z-index: 2;
-  overflow: hidden;
   pointer-events: none;
-  box-shadow: -2000px 0 0 2000px #F1C953;
   will-change: transform;
   animation: heroWaveSlide 1.1s cubic-bezier(0.65, 0, 0.35, 1) 1.7s both;
+}
+
+.hero-wave::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 100%;
+  width: 200cqw;
+  height: 515px;
+  background: #F1C953;
 }
 
 .hero-wave svg {
@@ -1696,37 +1712,18 @@ html {
   display: block;
 }
 
-/* Sehr breite Screens: Die Kurve bleibt 950px breit (Figma), links davon wird die gelbe Fläche
-   verlängert, damit der Text (liegt auf der Inhaltslinie) immer komplett auf Gelb steht. */
-@media (min-width: 1441px) {
-  .hero-wave {
-    width: calc(950px + max(0px, (100% - 1200px) / 2 - 300px));
-    max-width: none;
-  }
-  .hero-wave svg {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 950px;
-  }
-  .hero-wave::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 950px;
-    background: #F1C953;
-  }
+.wave-mobile {
+  display: none;
 }
 
-/* Ebene 3: Text. Der Block startet in der Mitte und wandert zur linken Inhaltslinie. */
+/* Ebene 3: Text (Figma: links 104px, oben 143px, Abstand zwischen Titel und Text 32px, Breite 345px).
+   Der Block startet in der Mitte und wandert zur linken Position. */
 .hero-content {
   position: absolute;
-  left: var(--hero-left);   /* gleiche Linie wie Logo und Inhalt */
-  top: 26.14%;
+  left: var(--hero-left);
+  top: 143px;
   z-index: 3;
-  max-width: 320px;
+  max-width: 345px;
   will-change: transform;
   animation: heroTextShift 1.1s cubic-bezier(0.65, 0, 0.35, 1) 1.7s both;
 }
@@ -1734,8 +1731,8 @@ html {
 .hero-content h1 {
   font-size: 3.75rem;
   color: var(--brown);
-  margin-bottom: 16px;
-  line-height: 1.2;
+  margin-bottom: 32px;
+  line-height: 63px;
   white-space: nowrap;
   animation: heroRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
@@ -1761,8 +1758,8 @@ html {
 .hero-badge {
   --badge-travel: 1;                       /* 1 = Desktop, kleiner auf Mobil */
   position: absolute;
-  left: calc(var(--hero-left) + 485px);   /* Mitte: Text (320px) + 85px Abstand + halbes Medaillon; wandert mit dem Text */
-  top: 72%;
+  left: calc(var(--frame-left) + var(--wave-w) * 0.81);   /* Figma: Mitte bei x = 524px (0,81 x 647px), also genau auf der Kurve */
+  top: 364px;                                             /* Figma: Mitte bei y = 364px */
   width: 160px;
   height: 160px;
   z-index: 4;
@@ -1848,8 +1845,21 @@ html {
 /* ===== Mobil ===== */
 @media (max-width: 768px) {
   .hero-figma {
-    height: 515px;
+    height: 480px;                 /* Mobil unverändert (wie bisher) */
     --hero-shift: max(0px, calc(50cqw - var(--gutter) - 115px));
+  }
+  .hero-photo {
+    height: 100%;
+  }
+  .wave-desktop {
+    display: none;
+  }
+  .wave-mobile {
+    display: block;
+  }
+  .hero-wave {
+    left: 0;
+    height: 100%;
   }
   /* Gelbe Fläche immer breit genug, damit der Text komplett darauf liegt
      (Text: 24px Abstand + max. 230px Breite; die Kurve liegt bei ca. 79 % der Wellenbreite) */
@@ -1868,6 +1878,7 @@ html {
   .hero-content h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
+    line-height: 1.2;
   }
   .hero-content p {
     font-size: 1.25rem;
@@ -2159,4 +2170,32 @@ html {
    (z. B. .privacy-error { display: block } zeigte die rote Fehlermeldung schon beim Laden der Seite) */
 [hidden] {
   display: none !important;
+}
+
+/* ===== Kopf- und Fußzeile nach Figma (header.svg 1920px, Frame 430 und Big screen view) =====
+   Kopfzeile: Das Logo beginnt bei x = 146px (Bildschirm 1440px) und bei x = 246px (1920px), 32px von oben.
+   Dazwischen und darüber wird der Abstand gleichmäßig angepasst, darunter rückt es bis zum Seitenrand nach links.
+   Fußzeile: ab 1440px wächst der Inhalt von 1200px auf 1437px (bei 1920px von x = 241px bis 1678px). */
+@media (min-width: 769px) {
+  .header-inner {
+    max-width: none;
+    padding-left: max(var(--gutter), min(calc(50% - 574px), calc(20.83% - 154px)));
+    padding-right: var(--gutter);
+    padding-top: 8px;                 /* Logo-Oberkante bei 32px (128px hohe Kopfzeile, Logo 72px) */
+    padding-bottom: 0;
+  }
+  .logo-img {
+    width: 72px;                      /* Figma: logo 03 = 72 x 72px */
+    height: 72px;
+    object-fit: contain;
+  }
+}
+
+@media (min-width: 1440px) {
+  .footer-inner {
+    max-width: none;
+    width: min(calc(100% - 240px), 1437px);
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
