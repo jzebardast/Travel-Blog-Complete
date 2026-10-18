@@ -1740,7 +1740,9 @@ html {
   display: block;
 }
 
-.wave-mobile {
+/* Nur eine der beiden Wellen wird angezeigt. Der Selektor muss genauso spezifisch sein wie
+   ".hero-wave svg" (display: block), sonst würden beide SVGs untereinander gezeichnet. */
+.hero-wave .wave-mobile {
   display: none;
 }
 
@@ -1832,6 +1834,10 @@ html {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes heroTextOut {
+  to { opacity: 0; }
+}
+
 @keyframes heroFade {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -1870,35 +1876,45 @@ html {
   }
 }
 
+/* Reduzierte Bewegung, mobil: Endzustand ohne Text auf dem Foto (wie Figma) */
+@media (prefers-reduced-motion: reduce) and (max-width: 768px) {
+  .hero-content {
+    opacity: 0;
+  }
+}
+
 /* ===== Mobil ===== */
 @media (max-width: 768px) {
   .hero-figma {
-    height: 480px;                 /* Mobil unverändert (wie bisher) */
+    height: 515px;                 /* Figma "Mobile full content": Hero 375 x 515px */
     --hero-shift: max(0px, calc(50cqw - var(--gutter) - 115px));
   }
   .hero-photo {
     height: 100%;
   }
-  .wave-desktop {
+  .hero-wave .wave-desktop {
     display: none;
   }
-  .wave-mobile {
+  .hero-wave .wave-mobile {
     display: block;
   }
+  /* Endzustand wie in Figma: nur eine kleine gelbe Ecke oben links (222 x 302px).
+     Am Anfang ist alles gelb (das ::before füllt die Fläche), dann fährt die Welle nach links. */
   .hero-wave {
     left: 0;
-    height: 100%;
-  }
-  /* Gelbe Fläche immer breit genug, damit der Text komplett darauf liegt
-     (Text: 24px Abstand + max. 230px Breite; die Kurve liegt bei ca. 79 % der Wellenbreite) */
-  .hero-wave {
-    width: clamp(340px, 58vw, 560px);
+    width: 222px;
+    height: 302.1px;
     min-width: 0;
   }
+  /* Der Text steht zu Beginn auf der gelben Fläche und blendet aus, während die Welle wegfährt
+     (im Figma-Endzustand der mobilen Ansicht steht kein Text mehr auf dem Foto). */
   .hero-content {
     left: var(--gutter);
     top: 96px;
     max-width: 230px;
+    animation:
+      heroTextShift 1.1s cubic-bezier(0.65, 0, 0.35, 1) 1.7s both,
+      heroTextOut 0.8s ease-in 1.7s forwards;
   }
   .hero-content p {
     max-width: 230px;
@@ -1921,15 +1937,18 @@ html {
     --photo-left: 0px;
     width: 100cqw;
     object-position: 27% 62%;
+    /* Figma zeigt das Paar etwa 1,5-fach größer: Zoom um einen Punkt neben dem Paar,
+       das Foto deckt den Hero dabei weiterhin komplett ab */
+    transform: scale(1.55);
+    transform-origin: 81% 44%;
   }
-  /* Medaillon bleibt komplett im Bild (wurde unten abgeschnitten) */
+  /* Medaillon wie in Figma (mobil): 160px, Mitte 151px von links und 201px von oben.
+     Es liegt auf der unteren Kante der gelben Ecke, nicht mehr unten rechts im Bild. */
   .hero-badge {
-    width: 120px;
-    height: 120px;
-    /* gleiche Position wie auf dem Desktop (505px), aber nie aus dem Bild heraus:
-       so springt das Medaillon beim Wechsel zwischen Desktop und Mobil nicht zur Seite */
-    left: min(505px, calc(100% - 90px));
-    top: calc(100% - 84px);
+    width: 160px;
+    height: 160px;
+    left: 151px;
+    top: 201px;
     --badge-travel: 0.5;
   }
 }
