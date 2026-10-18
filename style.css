@@ -1510,7 +1510,7 @@ html {
   font-weight: 500;
   font-size: 1.5rem;
   color: var(--brown);
-  margin-bottom: 16px;
+  margin-bottom: 66px;   /* Platz für den Pfeil zwischen Text und Button (wie in Figma) */
 }
 
 .btn-share {
@@ -1543,11 +1543,29 @@ html {
   display: inline-block;
 }
 
+/* Pfeil wie in Figma (exportiert aus dem Figma-Entwurf).
+   Desktop: 95 x 97px, Spitze zeigt auf den Button. Mobil: kleinerer Pfeil, Spitze zeigt nach unten. */
 .share-arrow {
   position: absolute;
-  left: -60px;
-  top: -10px;
   pointer-events: none;
+}
+.share-arrow--desktop {
+  left: -157px;
+  top: -58px;
+  width: 95px;
+  height: 97px;
+}
+.share-arrow--mobile {
+  display: none;
+  left: -90px;
+  top: -36px;
+  width: 32px;
+  height: 53px;
+}
+@media (max-width: 800px) {
+  .share-arrow--desktop { display: none; }
+  .share-arrow--mobile { display: block; }
+  .share-box p { margin-bottom: 40px; }   /* Platz für den Pfeil zwischen Text und Button */
 }
 
 .btn-share:hover {
