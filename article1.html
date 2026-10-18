@@ -164,6 +164,13 @@
       let isAnimating = false;
       const STEP_MS = 560; // match CSS transition duration
 
+      // Blocks new moves (hover, arrows, autoplay, swipe) until the current slide has
+      // finished. Without this a card that slides under the mouse is pulled in as well.
+      function lock() {
+        isAnimating = true;
+        setTimeout(function () { isAnimating = false; }, STEP_MS);
+      }
+
       function currentPosOf(card) {
         for (var p = 0; p < 5; p++) {
           if (card.classList.contains('pos-' + p)) return p;
@@ -238,7 +245,7 @@
           if (step < steps) {
             setTimeout(doStep, STEP_MS);
           } else {
-            isAnimating = false;
+            setTimeout(function () { isAnimating = false; }, STEP_MS);
           }
         }
         doStep();
@@ -249,11 +256,13 @@
       if (prevBtn) prevBtn.addEventListener('click', function () {
         if (isAnimating) return;
         prev();
+        lock();
         restartAuto();
       });
       if (nextBtn) nextBtn.addEventListener('click', function () {
         if (isAnimating) return;
         next();
+        lock();
         restartAuto();
       });
 
@@ -298,7 +307,7 @@
       function startAuto() {
         stopAuto();
         autoTimer = setInterval(function () {
-          if (!isAnimating) next();
+          if (!isAnimating) { next(); lock(); }
         }, 4000);
       }
       function stopAuto() {
@@ -326,6 +335,7 @@
         if (Math.abs(diff) > 40 && !isAnimating) {
           if (diff < 0) next();
           else prev();
+          lock();
         }
         startAuto();
       }, { passive: true });
