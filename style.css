@@ -1151,6 +1151,7 @@ html {
   overflow: hidden;
   box-shadow: -9px 5px 20px rgba(0,0,0,0.25);
   transition: transform 0.55s cubic-bezier(0.25, 0.8, 0.25, 1),
+              opacity 0.45s ease,
               z-index 0s;
   cursor: pointer;
   left: 50%;
@@ -1167,18 +1168,20 @@ html {
   pointer-events: none;
 }
 
-/* Positionsklassen des Karussells */
+/* Positionsklassen des Karussells
+   Stapelreihenfolge: Die mittlere Karte liegt immer ganz oben, damit sie komplett
+   sichtbar ist. Die Nachbarn liegen dahinter, die äußeren Karten ganz hinten. */
 .dest-card.pos-0 {
   transform: translateX(-404px) rotateY(32deg);
-  z-index: 1;
+  z-index: 2;
 }
 .dest-card.pos-1 {
   transform: translateX(-202px) rotateY(16deg);
-  z-index: 2;
+  z-index: 4;
 }
 .dest-card.pos-2 {
   transform: translateX(0) rotateY(0deg);
-  z-index: 3;
+  z-index: 5;
 }
 .dest-card.pos-3 {
   transform: translateX(202px) rotateY(-16deg);
@@ -1186,7 +1189,14 @@ html {
 }
 .dest-card.pos-4 {
   transform: translateX(404px) rotateY(-32deg);
-  z-index: 5;
+  z-index: 2;
+}
+
+/* Karte, die vom einen Ende ans andere wechselt: sofort unsichtbar verschieben,
+   danach einblenden (statt quer über alle anderen Karten zu fliegen) */
+.dest-card.is-wrapping {
+  transition: none;
+  opacity: 0;
 }
 
 /* Nicht-aktive Karten bekommen einen leichten Farbschleier, wie im Figma-Referenzbild */
@@ -2156,12 +2166,15 @@ html {
   .form-group label {
     line-height: 1.2;
   }
-  /* Pro-tipps-Reiter: Position wie in Figma (Reiter 196 x 66px, -13,67° gedreht, überlappt die Kastenecke) */
+  /* Pro-tipps-Reiter: Position wie in Figma (Reiter 196 x 66px, -13,67° gedreht, überlappt die Kastenecke).
+     Die Box hat eine runde Ecke von 30px. Der Reiter sitzt so weit innen, dass seine Unterkante
+     links ca. 30px unter der Oberkante der Box liegt und die Ecke dadurch verdeckt wird. */
   .pro-tips {
-    margin-top: 96px;
+    margin-top: 76px;
+    padding-top: 38px;   /* Platz, damit der erste Listenpunkt nicht unter dem Reiter liegt */
   }
   .pro-tips-label {
-    top: -50px;
+    top: -24px;
     left: calc(-1 * min(40px, max(var(--gutter), (100vw - 1200px) / 2) - 20px));
   }
 }

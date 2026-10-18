@@ -114,16 +114,16 @@
         <span class="footer-copyright"><img src="assets/icons/copyright.svg" alt="" class="copyright-icon" width="24" height="24"><span><span class="copyright-brand">Travel</span> Blog 2026</span></span>
       </div>
       <div class="footer-social">
-        <a href="#" aria-label="TikTok" class="social-icon">
+        <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-icon">
           <img src="assets/icons/tiktok.svg" alt="TikTok" width="32" height="32">
         </a>
-        <a href="#" aria-label="YouTube" class="social-icon">
+        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-icon">
           <img src="assets/icons/youtube.svg" alt="YouTube" width="44" height="32">
         </a>
-        <a href="#" aria-label="Facebook" class="social-icon">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-icon">
           <img src="assets/icons/facebook.svg" alt="Facebook" width="32" height="32">
         </a>
-        <a href="#" aria-label="Instagram" class="social-icon">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon">
           <img src="assets/icons/instagram.svg" alt="Instagram" width="32" height="32">
         </a>
       </div>
@@ -164,12 +164,29 @@
       let isAnimating = false;
       const STEP_MS = 560; // match CSS transition duration
 
+      function currentPosOf(card) {
+        for (var p = 0; p < 5; p++) {
+          if (card.classList.contains('pos-' + p)) return p;
+        }
+        return -1;
+      }
+
       function render() {
         visualSlots.forEach(function (cardIndex, pos) {
           var card = cards[cardIndex];
           if (!card) return;
+          var oldPos = currentPosOf(card);
           card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3', 'pos-4');
           card.classList.add('pos-' + pos);
+          // A card that wraps from one end to the other would fly across all
+          // other cards (the "jump"). Let it fade in at its new place instead.
+          if (oldPos !== -1 && Math.abs(oldPos - pos) > 1) {
+            card.classList.add('is-wrapping');
+            void card.offsetWidth; // apply the instant move + hidden state
+            requestAnimationFrame(function () {
+              card.classList.remove('is-wrapping');
+            });
+          }
         });
         var centerCardIndex = visualSlots[Math.min(2, visualSlots.length - 1)];
         dots.forEach(function (dot, i) {
@@ -177,13 +194,17 @@
         });
       }
 
+      // next(): cards move one slot to the left, so the right neighbour becomes
+      // the center card and the active dot moves to the right.
       function next() {
-        visualSlots.unshift(visualSlots.pop());
+        visualSlots.push(visualSlots.shift());
         render();
       }
 
+      // prev(): cards move one slot to the right, so the left neighbour becomes
+      // the center card and the active dot moves to the left.
       function prev() {
-        visualSlots.push(visualSlots.shift());
+        visualSlots.unshift(visualSlots.pop());
         render();
       }
 
@@ -198,9 +219,9 @@
         if (currentPos === -1) return;
 
         // Wie viele Schritte braucht die Karte bis zur Mitte?
-        // next() schiebt alle Karten nach rechts, prev() nach links
-        var stepsNext = (centerPos - currentPos + N) % N;
-        var stepsPrev = (currentPos - centerPos + N) % N;
+        // next() schiebt alle Karten nach links, prev() nach rechts
+        var stepsNext = (currentPos - centerPos + N) % N;
+        var stepsPrev = (centerPos - currentPos + N) % N;
         var useNext = stepsNext <= stepsPrev;
         var steps = useNext ? stepsNext : stepsPrev;
 
