@@ -11,57 +11,63 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="assets/images/logo.png" type="image/png">
   <style>
-    .graph-section { padding: 20px 20px 20px; max-width: 1240px; margin: 0 auto; }
+    /* Diagramm-Bereich wie in Figma: Die Diagramm-Bilder sind selbst schon die abgerundeten Karten
+       (Figma: 640 x 436px und 519 x 471px, Radius 53px). Sie liegen nicht in einer weiteren Karte. */
+    .graph-section { padding: 0 20px; max-width: 1240px; margin: 0 auto; }
     .graph-title {
       font-family: 'Arima', serif;
-      font-size: 1.6rem;
+      font-size: 2rem;            /* Figma: 32px, Gewicht 600, Zeilenhöhe 120 % */
+      font-weight: 600;
+      line-height: 1.2;
       color: #54370D;
       text-align: center;
-      margin-bottom: 24px;
+      margin: 40px 0 24px;
     }
-    .graph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 8px 0 32px; }
-    .graph-card {
-      background: #fff;
-      border-radius: 30px;
-      padding: 20px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-      text-align: center;
+    .graph-card { background: none; box-shadow: none; padding: 0; border-radius: 0; text-align: center; }
+    .graph-card--full { max-width: 640px; margin: 0 auto 88px; }   /* Figma: 88px bis zum Text */
+    .graph-card img { display: block; width: 100%; height: auto; margin: 0 auto; border-radius: 0; }
+    .graph-section-text {
+      max-width: 1200px;
+      margin: 0 auto 88px;        /* Figma: 88px Abstand zwischen den Bereichen */
+      font-size: 1.5rem;          /* Figma: 24px, Zeilenhöhe 120 % */
+      line-height: 1.2;
+      color: #3D3D3D;
     }
-    .graph-card--full { max-width: 700px; margin: 0 auto 40px; }
+    .graph-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;                  /* Figma: zwei Spalten à 519px mit 80px Abstand */
+      max-width: 1118px;
+      margin: 0 auto 88px;
+    }
+    .graph-grid .graph-card { display: flex; flex-direction: column; gap: 24px; }
     .graph-card h3 {
       font-family: 'Arima', serif;
-      font-size: 1.2rem;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.2;
       color: #54370D;
-      margin-bottom: 10px;
-    }
-    .graph-card img {
-      width: 100%;
-      height: auto;
-      border-radius: 16px;
-      display: block;
-      margin: 0 auto;
-    }
-    .graph-card .chart-caption {
-      font-size: 0.9rem;
-      color: #7a5c3a;
-      margin-top: 12px;
-      line-height: 1.5;
+      margin: 0;
     }
     .graph-card-intro {
       text-align: left;
-      font-size: 1rem;
+      font-size: 1.5rem;
+      line-height: 1.2;
       color: #3D3D3D;
-      line-height: 1.5;
-      margin-bottom: 16px;
+      margin: 0;
     }
-    .graph-section-text {
-      max-width: 1200px;
-      margin: 0 auto 24px;
-      color: #3D3D3D;
-      line-height: 1.6;
+    @media (max-width: 800px) {
+      .graph-title, .graph-card h3 { font-size: 1.6rem; }
+      .graph-title { margin: 32px 0 20px; }
+      .graph-section-text, .graph-card-intro { font-size: 1.05rem; line-height: 1.65; }
+      .graph-card--full { margin-bottom: 32px; }       /* Figma mobil: ca. 32px unter dem Diagramm */
+      .graph-section-text { margin-bottom: 40px; }
+      .graph-grid { grid-template-columns: 1fr; gap: 40px; margin-bottom: 48px; }
+      .graph-grid .graph-card { gap: 16px; }
     }
-    @media (max-width: 700px) {
-      .graph-grid { grid-template-columns: 1fr; }
+    @media (max-width: 480px) {
+      .graph-title, .graph-card h3 { font-size: 1.35rem; }
+      .graph-section-text, .graph-card-intro { font-size: 1rem; }
     }
   </style>
 </head>
