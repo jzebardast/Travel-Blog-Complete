@@ -1277,9 +1277,8 @@ html {
   margin: 0 auto;
   border-radius: 53px;
   overflow: hidden;
-  aspect-ratio: 931/449;
+  aspect-ratio: 931/520;       /* Figma: Video 931 x 520px, Radius 53px, kein Schatten */
   background: #111;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
 }
 
 .video-wrapper video {
@@ -1300,8 +1299,8 @@ html {
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 146px;
-  height: 146px;
+  width: 176px;                /* Figma: play_circle 176 x 176px, mittig */
+  height: 176px;
   border: none;
   background: transparent;
   cursor: pointer;

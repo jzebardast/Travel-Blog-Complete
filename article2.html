@@ -65,7 +65,6 @@
         poster="assets/images/highlight-copenhagen.jpg"
         playsinline
         preload="metadata"
-        controls
         title="Copenhagen in 3 Days – Travel Film">
         <!-- Beispielvideo -->
         <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
@@ -91,6 +90,11 @@
         vid.play();
         hideBtn();
       });
+      // Wie in Figma zeigt das Video vor dem Start nur das Vorschaubild und den Play-Button.
+      // Die Steuerleiste des Browsers erscheint erst, sobald das Video läuft.
+      function showControls() { vid.setAttribute('controls', ''); }
+      btn.addEventListener('click', showControls);
+      vid.addEventListener('play', showControls);
       vid.addEventListener('play', hideBtn);
       vid.addEventListener('pause', showBtn);
       vid.addEventListener('ended', showBtn);
