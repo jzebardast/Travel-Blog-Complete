@@ -1475,7 +1475,7 @@ html {
 
 @media (max-width: 768px) {
   .pro-tips {
-    margin-top: 72px;
+    margin-top: 88px;   /* Platz für den gedrehten Reiter, damit er den Text darüber nicht berührt */
   }
   .pro-tips-label {
     top: -48px;
@@ -2203,16 +2203,37 @@ html {
   .form-group label {
     line-height: 1.2;
   }
-  /* Pro-tipps-Reiter: Position wie in Figma (Reiter 196 x 66px, -13,67° gedreht, überlappt die Kastenecke).
-     Die Box hat eine runde Ecke von 30px. Der Reiter sitzt so weit innen, dass seine Unterkante
-     links ca. 30px unter der Oberkante der Box liegt und die Ecke dadurch verdeckt wird. */
+  /* Artikel-Listen wie in Figma: Der Listenblock ("text 02") ist 1000px breit und mittig (100px Einzug),
+     die Listenpunkte stehen ca. 40px weiter innen. */
+  .article-body > .article-list-intro,
+  .article-body > ol,
+  .article-body > ul {
+    margin-left: min(100px, 8.3vw);
+    margin-right: min(100px, 8.3vw);
+  }
+  .article-list-intro {
+    padding-left: 0;
+  }
+  .article-body > ol,
+  .article-body > ul {
+    padding-left: 40px;
+  }
+
+  /* Pro-tipps-Kasten wie in Figma ("Tipps": 1134px breit, Kasten 1083px = 84px links und 33px rechts eingerückt,
+     Innenabstand 26px 16px 24px, Radius 30px). Der Reiter (196 x 66px, -13,67° um die Mitte gedreht) liegt
+     51px links und 71px über dem Kasten und verdeckt dadurch die obere linke Ecke. */
   .pro-tips {
-    margin-top: 76px;
-    padding-top: 38px;   /* Platz, damit der erste Listenpunkt nicht unter dem Reiter liegt */
+    --pt-left: min(84px, 7vw);
+    margin: 112px min(33px, 2.75vw) 40px var(--pt-left);
+    padding: 26px 16px 24px;
+  }
+  .pro-tips ol {
+    padding-left: 34px;
   }
   .pro-tips-label {
-    top: -24px;
-    left: calc(-1 * min(40px, max(var(--gutter), (100vw - 1200px) / 2) - 20px));
+    top: -71.4px;
+    left: calc(-1 * min(51px, var(--pt-left)));
+    transform-origin: 50% 50%;
   }
 }
 
