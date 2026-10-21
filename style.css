@@ -1509,7 +1509,10 @@ html {
   font-weight: 500;
   font-size: 1.5rem;
   color: var(--brown);
-  margin-bottom: 66px;   /* Platz für den Pfeil zwischen Text und Button (wie in Figma) */
+  max-width: 463px;      /* Figma "Follow me": Textfeld 463px breit, der Text bricht dadurch in zwei Zeilen um */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 48px;   /* Figma: 48px zwischen Text und Button */
 }
 
 .btn-share {
@@ -2060,6 +2063,11 @@ html {
 .share-box p {
   font-family: 'Arima', serif;
   font-weight: 500;
+}
+
+/* Figma: Text in Braun (#54370D). Die allgemeine Regel ".article-body p" färbt ihn sonst grau. */
+.article-body .share-box p {
+  color: var(--brown);
 }
 
 /* Mobile Typografie */
