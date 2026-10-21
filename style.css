@@ -2331,3 +2331,48 @@ html {
     font-size: 1.25rem;
   }
 }
+
+/* ===== Artikelkopf mobil wie in Figma (Blog-Detail, 375px) =====
+   Kicker ca. 21px / 600, Titel 40px / 700 mit Zeilenhöhe 100 %, Einleitung 18px mit Zeilenhöhe 120 %. */
+@media (max-width: 600px) {
+  .article-kicker {
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+  .article-content h1 {
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  .article-lead,
+  .article-lead--compact {
+    font-size: 1.125rem;
+    line-height: 1.2;
+  }
+  .article-meta {
+    line-height: 1.2;
+  }
+  /* Abstände wie in Figma: 8px zwischen Titel und Einleitung, ca. 24px bis zur Autorenkarte */
+  .article-content h1 {
+    margin-bottom: 8px;
+  }
+  .article-lead,
+  .article-lead--compact {
+    margin-top: 0;
+  }
+  .article-hero-inner {
+    gap: 24px;
+  }
+}
+
+/* ===== Überschriften mit Symbol wie in Figma ("Headline": Zeile, unten ausgerichtet, 8px Abstand, Text 49px hoch) ===== */
+@media (min-width: 769px) {
+  .section-header-top {
+    align-items: flex-end;
+    column-gap: 8px;
+  }
+  .section-header-top h2 {
+    line-height: 0.95;
+  }
+}
+
