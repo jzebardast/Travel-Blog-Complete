@@ -104,6 +104,15 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   let successTimer = null;
   if (!contactForm) return;
 
+  // Nachrichtenfeld startet einzeilig (wie in Figma) und wächst mit dem Text
+  const messageField = document.getElementById('message');
+  if (messageField) {
+    messageField.addEventListener('input', () => {
+      messageField.style.height = 'auto';
+      messageField.style.height = messageField.scrollHeight + 'px';
+    });
+  }
+
   // Send-Button erst aktiv, wenn die Checkbox angehakt ist
   if (privacyCheckbox && sendBtn) {
     sendBtn.disabled = !privacyCheckbox.checked;
@@ -129,6 +138,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     // Formular sofort leeren und sichtbar lassen, damit sofort wieder etwas eingegeben werden kann.
     // Die Erfolgsmeldung erscheint unter dem Formular und verschwindet nach 4 Sekunden.
     contactForm.reset();
+    if (messageField) messageField.style.height = '';
     if (sendBtn) sendBtn.disabled = true;
     formSuccess.hidden = false;
     clearTimeout(successTimer);

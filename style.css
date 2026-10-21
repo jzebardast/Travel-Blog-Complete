@@ -2277,3 +2277,57 @@ html {
     padding-right: 0;
   }
 }
+
+/* ===== FAQ und Kontaktformular wie in Figma ===== */
+/* Felder sind leer: nur Beschriftung und eine Linie (Figma zeigt keine Beispieltexte in den Feldern) */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: transparent;
+}
+/* Eingabetext: 24px fett, Linie 17px unter dem Text (Figma: Feld = Label 29px + 17px + Text 31px + 17px + Linie) */
+.form-group input,
+.form-group textarea {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 0 0 17px;
+}
+/* Nachrichtenfeld startet einzeilig wie in Figma und wächst beim Tippen (siehe script.js) */
+.form-group textarea {
+  resize: none;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
+  display: block;
+}
+
+@media (min-width: 769px) {
+  /* FAQ-Zeile: Figma 61px hoch (Innenabstand 16px 14px, Text 24px mit Zeilenhöhe 120 %, Pfeil 24px) */
+  .faq-question {
+    padding: 16px 14px;
+    line-height: 1.2;
+  }
+  .faq-icon img {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+  /* Formular: zwei Spalten mit 59px Abstand, 64px zwischen den Zeilen, 16px bis zur Checkbox */
+  .form-row {
+    gap: 59px;
+    margin-bottom: 64px;
+  }
+  .form-row .form-group {
+    margin-bottom: 0;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-group input,
+  .form-group textarea {
+    font-size: 1.25rem;
+  }
+}
