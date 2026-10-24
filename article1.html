@@ -149,198 +149,228 @@
   <script src="script.js"></script>
 
   <script>
-    // Stacked card carousel – exact Figma prototype behavior
+    // Karten-Karussell wie im Figma-Prototyp (Desktop) und als einzeiliger Fächer auf dem Handy.
+    // Desktop: fünf gleich große Karten (300 x 440px) bilden eine Treppe, die letzte liegt oben.
+    // Fährt die Maus über eine Karte, löst sie sich aus dem Stapel und steht groß und gerade da.
     (function () {
       const track = document.querySelector('.card-track');
       if (!track) return;
-
+      const carousel = document.getElementById('cardCarousel');
       const cards = Array.from(track.querySelectorAll('.dest-card'));
       const dots  = Array.from(document.querySelectorAll('#cardDots .dot'));
       const N = cards.length;
       if (N === 0) return;
 
-      // visualSlots[pos] = index of the card that currently sits in that visual slot
-      // slot 0 = far left, slot 2 = center (large), slot 4 = far right
+      // visualSlots[pos] = Index der Karte, die gerade in diesem Platz liegt (0 = ganz links, 4 = ganz rechts/oben)
       let visualSlots = [0, 1, 2, 3, 4].slice(0, N);
       let isAnimating = false;
-      const STEP_MS = 560; // match CSS transition duration
+      const STEP_MS = 560; // wie die CSS-Übergangszeit
 
-      // Blocks new moves (hover, arrows, autoplay, swipe) until the current slide has
-      // finished. Without this a card that slides under the mouse is pulled in as well.
-      function lock() {
-        isAnimating = true;
-        setTimeout(function () { isAnimating = false; }, STEP_MS);
+      const desktopMQ = window.matchMedia('(min-width: 801px)');
+      const canHover  = window.matchMedia('(hover: hover)').matches;
+      let hoveredCard = -1;      // Index der Karte unter der Maus (Desktop), -1 = keine
+
+      // ---- Maße aus dem Figma-Entwurf (Desktop) ----
+      const CW = 300, CH = 440;  // Karte
+      const STEP = 200;          // Abstand der Karten in der Treppe
+      const STEP_D = 160;        // Abstand der Karten, wenn eine Karte losgelöst ist
+      const GAP = 340;           // Abstand von der Karte davor zur losgelösten Karte
+      const ROW = 1300, ROW_H = 460, TOP = 10;
+
+      // Perspektive: ein Rechteck (0,0)-(CW,CH) wird auf ein Viereck abgebildet (matrix3d)
+      function homography(dst) {
+        const src = [[0, 0], [CW, 0], [CW, CH], [0, CH]];
+        const A = [], B = [];
+        for (let i = 0; i < 4; i++) {
+          const [x, y] = src[i], [u, v] = dst[i];
+          A.push([x, y, 1, 0, 0, 0, -x * u, -y * u]); B.push(u);
+          A.push([0, 0, 0, x, y, 1, -x * v, -y * v]); B.push(v);
+        }
+        for (let i = 0; i < 8; i++) {                       // Gauß-Verfahren
+          let p = i;
+          for (let r = i + 1; r < 8; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r;
+          [A[i], A[p]] = [A[p], A[i]]; [B[i], B[p]] = [B[p], B[i]];
+          for (let r = i + 1; r < 8; r++) {
+            const k = A[r][i] / A[i][i];
+            for (let c = i; c < 8; c++) A[r][c] -= k * A[i][c];
+            B[r] -= k * B[i];
+          }
+        }
+        const h = new Array(8);
+        for (let i = 7; i >= 0; i--) {
+          let sum = B[i];
+          for (let c = i + 1; c < 8; c++) sum -= A[i][c] * h[c];
+          h[i] = sum / A[i][i];
+        }
+        const [a, b, c, d, e, f, g, hh] = h;
+        return 'matrix3d(' + [a, d, 0, g, b, e, 0, hh, 0, 0, 1, 0, c, f, 0, 1].join(',') + ')';
+      }
+      // Figma: linke Kante 440px hoch, rechte Kante ca. 362px (Karte kippt nach rechts weg)
+      const TILT_R = homography([[0, 0], [300, 33.5], [300, 396], [0, 440]]);
+      // Spiegelbild für Karten rechts von der losgelösten Karte
+      const TILT_L = homography([[0, 33.5], [300, 0], [300, 440], [0, 396]]);
+      const FLAT   = 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)';
+
+      function currentSlot() { return desktopMQ.matches ? N - 1 : Math.min(2, N - 1); }
+
+      function layoutDesktop() {
+        const d = hoveredCard === -1 ? -1 : visualSlots.indexOf(hoveredCard);
+        const xs = [], tilts = [], zs = [];
+        if (d === -1) {
+          for (let s = 0; s < N; s++) { xs[s] = s * STEP; tilts[s] = TILT_R; zs[s] = s + 1; }
+        } else {
+          const flatX = d > 0 ? (d - 1) * STEP_D + GAP : 0;
+          for (let s = 0; s < N; s++) {
+            if (s < d)      { xs[s] = s * STEP_D;                       tilts[s] = TILT_R; zs[s] = s + 1; }
+            else if (s === d) { xs[s] = flatX;                          tilts[s] = FLAT;   zs[s] = 20; }
+            else            { xs[s] = flatX + GAP + (s - d - 1) * STEP_D; tilts[s] = TILT_L; zs[s] = 20 - (s - d); }
+          }
+        }
+        const offset = (ROW - (Math.max.apply(null, xs) + CW)) / 2;   // mittig in der 1300px breiten Reihe
+        visualSlots.forEach(function (cardIndex, s) {
+          const card = cards[cardIndex];
+          card.style.transform = 'translate3d(' + (offset + xs[s]) + 'px,0,0) ' + tilts[s];
+          card.style.zIndex = zs[s];
+        });
+      }
+
+      function clearDesktop() {
+        track.removeAttribute('style');
+        carousel.style.height = '';
+        cards.forEach(function (c) { c.style.transform = ''; c.style.zIndex = ''; });
+      }
+
+      // Bei schmaleren Bildschirmen wird die 1300px breite Reihe verkleinert
+      let scale = 1;
+      function fit() {
+        if (!desktopMQ.matches) { clearDesktop(); return; }
+        scale = Math.min(1, carousel.clientWidth / ROW);
+        track.style.width = ROW + 'px';
+        track.style.height = ROW_H + 'px';
+        track.style.transformOrigin = '0 0';
+        track.style.transform = 'scale(' + scale + ')';
+        track.style.marginBottom = (-(ROW_H * (1 - scale))) + 'px';
       }
 
       function currentPosOf(card) {
-        for (var p = 0; p < 5; p++) {
-          if (card.classList.contains('pos-' + p)) return p;
-        }
+        for (let p = 0; p < 5; p++) if (card.classList.contains('pos-' + p)) return p;
         return -1;
       }
 
       function render() {
         visualSlots.forEach(function (cardIndex, pos) {
-          var card = cards[cardIndex];
+          const card = cards[cardIndex];
           if (!card) return;
-          var oldPos = currentPosOf(card);
+          const oldPos = currentPosOf(card);
           card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3', 'pos-4');
           card.classList.add('pos-' + pos);
-          // A card that wraps from one end to the other would fly across all
-          // other cards (the "jump"). Let it fade in at its new place instead.
+          // Eine Karte, die vom einen Ende ans andere wechselt, würde quer über alle anderen fliegen.
+          // Sie wird stattdessen am neuen Platz eingeblendet.
           if (oldPos !== -1 && Math.abs(oldPos - pos) > 1) {
             card.classList.add('is-wrapping');
-            void card.offsetWidth; // apply the instant move + hidden state
-            requestAnimationFrame(function () {
-              card.classList.remove('is-wrapping');
-            });
+            void card.offsetWidth;
+            requestAnimationFrame(function () { card.classList.remove('is-wrapping'); });
           }
         });
-        var centerCardIndex = visualSlots[Math.min(2, visualSlots.length - 1)];
-        dots.forEach(function (dot, i) {
-          dot.classList.toggle('active', i === centerCardIndex);
-        });
+        if (desktopMQ.matches) layoutDesktop();
+        const topCard = visualSlots[currentSlot()];
+        dots.forEach(function (dot, i) { dot.classList.toggle('active', i === topCard); });
       }
 
-      // next(): cards move one slot to the left, so the right neighbour becomes
-      // the center card and the active dot moves to the right.
-      function next() {
-        visualSlots.push(visualSlots.shift());
-        render();
+      function lock() {
+        isAnimating = true;
+        setTimeout(function () { isAnimating = false; }, STEP_MS);
       }
 
-      // prev(): cards move one slot to the right, so the left neighbour becomes
-      // the center card and the active dot moves to the left.
-      function prev() {
-        visualSlots.unshift(visualSlots.pop());
-        render();
-      }
+      // next(): Karten rutschen einen Platz nach links, die nächste Karte kommt nach oben, der Punkt wandert nach rechts
+      function next() { visualSlots.push(visualSlots.shift()); render(); }
+      function prev() { visualSlots.unshift(visualSlots.pop()); render(); }
 
-      // Rotate shortest path so animation is visible step-by-step
+      // Kürzesten Weg wählen, damit die Bewegung Schritt für Schritt zu sehen ist
       function goToCard(targetIndex) {
         if (isAnimating) return;
-        var centerPos = Math.min(2, visualSlots.length - 1);
+        const centerPos = currentSlot();
         if (visualSlots[centerPos] === targetIndex) return;
-
-        // Find current position of target in visualSlots
-        var currentPos = visualSlots.indexOf(targetIndex);
+        const currentPos = visualSlots.indexOf(targetIndex);
         if (currentPos === -1) return;
-
-        // Wie viele Schritte braucht die Karte bis zur Mitte?
-        // next() schiebt alle Karten nach links, prev() nach rechts
-        var stepsNext = (currentPos - centerPos + N) % N;
-        var stepsPrev = (centerPos - currentPos + N) % N;
-        var useNext = stepsNext <= stepsPrev;
-        var steps = useNext ? stepsNext : stepsPrev;
-
+        const stepsNext = (currentPos - centerPos + N) % N;
+        const stepsPrev = (centerPos - currentPos + N) % N;
+        const useNext = stepsNext <= stepsPrev;
+        const steps = useNext ? stepsNext : stepsPrev;
         isAnimating = true;
-        var step = 0;
-        function doStep() {
-          if (step >= steps) {
-            isAnimating = false;
-            return;
-          }
-          if (useNext) next();
-          else prev();
+        let step = 0;
+        (function doStep() {
+          if (useNext) next(); else prev();
           step++;
-          if (step < steps) {
-            setTimeout(doStep, STEP_MS);
-          } else {
-            setTimeout(function () { isAnimating = false; }, STEP_MS);
-          }
-        }
-        doStep();
+          if (step < steps) setTimeout(doStep, STEP_MS);
+          else setTimeout(function () { isAnimating = false; }, STEP_MS);
+        })();
       }
 
-      var prevBtn = document.getElementById('cardPrev');
-      var nextBtn = document.getElementById('cardNext');
-      if (prevBtn) prevBtn.addEventListener('click', function () {
-        if (isAnimating) return;
-        prev();
-        lock();
-        restartAuto();
-      });
-      if (nextBtn) nextBtn.addEventListener('click', function () {
-        if (isAnimating) return;
-        next();
-        lock();
-        restartAuto();
-      });
+      const prevBtn = document.getElementById('cardPrev');
+      const nextBtn = document.getElementById('cardNext');
+      if (prevBtn) prevBtn.addEventListener('click', function () { if (isAnimating) return; prev(); lock(); restartAuto(); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { if (isAnimating) return; next(); lock(); restartAuto(); });
 
       cards.forEach(function (card, i) {
-        card.addEventListener('click', function () {
-          goToCard(i);
-          restartAuto();
-        });
+        card.addEventListener('click', function () { goToCard(i); restartAuto(); });
       });
 
-      // Hover-Effekt wie im Figma-Prototyp: Bewegt sich die Maus über eine seitliche Karte,
-      // wandert sie in die Mitte. Nur auf Geräten mit Maus. Es zählt nur echte Mausbewegung
-      // (mousemove), damit nichts passiert, wenn sich Karten unter dem ruhenden Mauszeiger verschieben.
-      if (window.matchMedia('(hover: hover)').matches) {
-        cards.forEach(function (card, i) {
-          var hoverTimer = null;
-          card.addEventListener('mousemove', function (e) {
-            // Chrome meldet nach dem Verschieben der Karten ein "künstliches" mousemove ohne Bewegung: ignorieren
-            if (!e.movementX && !e.movementY) return;
-            if (isAnimating || hoverTimer || card.classList.contains('pos-2')) return;
-            hoverTimer = setTimeout(function () {
-              hoverTimer = null;
-              if (!card.classList.contains('pos-2')) goToCard(i);
-            }, 220);
-          });
-          card.addEventListener('mouseleave', function () {
-            clearTimeout(hoverTimer);
-            hoverTimer = null;
-          });
+      // Hover wie im Figma-Prototyp (Desktop): Die Karte unter der Maus löst sich aus dem Stapel.
+      // Der Bereich der Reihe ist in 5 feste Zonen geteilt (wie in der ruhenden Treppe). So bleibt die Maus
+      // immer in "ihrer" Zone, auch wenn die Karte darunter wegrutscht, und der Zustand flackert nicht.
+      function zoneAt(clientX, clientY) {
+        const r = track.getBoundingClientRect();
+        const x = (clientX - r.left) / scale, y = (clientY - r.top) / scale;
+        if (x < 0 || x > ROW || y < 0 || y > ROW_H) return -1;
+        const restOffset = (ROW - ((N - 1) * STEP + CW)) / 2;
+        const z = Math.min(N - 1, Math.max(0, Math.floor((x - restOffset) / STEP)));
+        return visualSlots[z];
+      }
+      if (canHover) {
+        track.addEventListener('mousemove', function (e) {
+          if (!desktopMQ.matches) return;
+          const z = zoneAt(e.clientX, e.clientY);
+          if (z !== hoveredCard) { hoveredCard = z; layoutDesktop(); }
+        });
+        track.addEventListener('mouseleave', function () {
+          if (hoveredCard !== -1) { hoveredCard = -1; if (desktopMQ.matches) layoutDesktop(); }
         });
       }
 
       dots.forEach(function (dot, i) {
-        dot.addEventListener('click', function () {
-          goToCard(i);
-          restartAuto();
-        });
+        dot.addEventListener('click', function () { goToCard(i); restartAuto(); });
       });
 
-      // Auto-play every 4 seconds
-      var autoTimer = null;
+      // Automatisch alle 4 Sekunden weiter
+      let autoTimer = null;
       function startAuto() {
         stopAuto();
-        autoTimer = setInterval(function () {
-          if (!isAnimating) { next(); lock(); }
-        }, 4000);
+        autoTimer = setInterval(function () { if (!isAnimating) { next(); lock(); } }, 4000);
       }
-      function stopAuto() {
-        if (autoTimer) {
-          clearInterval(autoTimer);
-          autoTimer = null;
-        }
-      }
-      function restartAuto() {
-        stopAuto();
-        startAuto();
-      }
+      function stopAuto() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+      function restartAuto() { stopAuto(); startAuto(); }
 
       track.addEventListener('mouseenter', stopAuto);
       track.addEventListener('mouseleave', startAuto);
 
-      // Touch swipe on card track
-      var touchX = 0;
-      track.addEventListener('touchstart', function (e) {
-        touchX = e.changedTouches[0].screenX;
-        stopAuto();
-      }, { passive: true });
+      // Wischen auf dem Handy
+      let touchX = 0;
+      track.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].screenX; stopAuto(); }, { passive: true });
       track.addEventListener('touchend', function (e) {
-        var diff = e.changedTouches[0].screenX - touchX;
+        const diff = e.changedTouches[0].screenX - touchX;
         if (Math.abs(diff) > 40 && !isAnimating) {
-          if (diff < 0) next();
-          else prev();
+          if (diff < 0) next(); else prev();
           lock();
         }
         startAuto();
       }, { passive: true });
 
+      function onResize() { fit(); render(); }
+      window.addEventListener('resize', onResize);
+      if (desktopMQ.addEventListener) desktopMQ.addEventListener('change', onResize);
+
+      fit();
       render();
       setTimeout(startAuto, 500);
     })();

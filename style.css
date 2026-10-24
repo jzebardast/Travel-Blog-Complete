@@ -2376,3 +2376,52 @@ html {
   }
 }
 
+/* ===== Karussell (Artikel 1) wie im Figma-Entwurf, Desktop und Tablet =====
+   Fünf Karten à 300 x 440px (Radius 16px, Schatten -9px 5px 20px) in einer 1300px breiten Reihe.
+   Position, Kippung und das Lösen der Karte beim Hover berechnet das Skript in article1.html;
+   bei schmaleren Bildschirmen wird die ganze Reihe verkleinert. Auf dem Handy bleibt der Fächer. */
+@media (min-width: 801px) {
+  .card-carousel {
+    max-width: 1300px;
+    height: auto;
+  }
+  .card-track {
+    display: block;
+    width: 1300px;
+    height: 460px;
+    perspective: none;
+  }
+  .dest-card {
+    width: 300px;
+    height: 440px;
+    left: 0;
+    top: 10px;
+    margin: 0;
+    transform-origin: 0 0;
+  }
+  /* Im Figma-Entwurf liegt kein Farbschleier auf den Karten */
+  .dest-card::after {
+    display: none;
+  }
+  /* Abstände wie in Figma: 64px zwischen Überschrift und Karten, 88px zwischen Karten und Text.
+     Pfeile und Punkte (Zusatz, nicht im Desktop-Entwurf) liegen dafür in einer einzigen Zeile:
+     Pfeil links, Punkte in der Mitte, Pfeil rechts. */
+  .article-carousel-section {
+    padding-bottom: 19px;
+  }
+  .article-carousel-section .article-section-title {
+    margin-bottom: 54px;
+  }
+  .card-nav {
+    gap: 192px;
+  }
+  .card-dots {
+    position: relative;
+    margin-top: -31px;
+    pointer-events: none;   /* Der Streifen liegt über der Pfeil-Zeile und darf die Pfeile nicht verdecken */
+  }
+  .card-dots .dot {
+    pointer-events: auto;
+  }
+}
+
